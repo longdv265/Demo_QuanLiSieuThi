@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Market</title>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
+</head>
+<body>
+    <div>
+        <h2>Employee list</h2>
+        <ul id="employee" />
+    </div>
+    <script>
+        var uri = 'api/Employee';
+        $(document).ready(function () {
+            $.getJSON(uri)
+                .done(function (data) {
+                    // On success, 'data' contains a list of products.
+                    $.each(data, function (key, item) {
+                        // Add a list item for the product.
+                        $('<li>', { text: formatItem(item) }).appendTo($('#employee'));
+                    });
+                });
+        });
+    </script>
+</body>
+</html>

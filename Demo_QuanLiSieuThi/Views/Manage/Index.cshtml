@@ -1,0 +1,592 @@
+﻿
+@{
+    ViewBag.Title = "Manage Page";
+    Layout = "~/Views/Shared/_LayoutManage.cshtml";
+}
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
+
+<nav class="navbar navbar-default navbar-fixed-top main-toolbar">
+    <div class="logo">
+        <img src="https://amismisa.misacdn.net/apps/employee-self-service/assets/images/employee.svg"
+             alt="logo" />
+        <div class="title">Manage</div>
+    </div>
+    <div class="container-info">
+        <a href="@Url.Action("CreateBill", "Bill")">
+            <i class="btn btn-danger">Create Bill</i>
+        </a>
+        <a href="@Url.Action("Logout", "Home")">
+            <i class="btn btn-danger">Logout</i>
+        </a>
+    </div>
+</nav>
+
+<div class="main-container">
+    <div class="sidebar-container">
+        <div class="sidebar big-sidebar">
+            <div class="sidebar-item-list">
+                <a href="#main-content-1">
+                    <div onClick="changeTab_1()"
+                         class="sidebar-item sidebar-item-menu">
+                        <div class="item-content" style="background-color: white">
+                            <div class="icon-main-sidebar-profile item-icon active-icon"></div>
+                            <div class="icon-text">My Profile</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="#main-content-2">
+                    <div onClick="changeTab_2()"
+                         class="sidebar-item sidebar-item-menu">
+
+                        <div class="item-content">
+                            <div class="icon-main-sidebar-timesheet item-icon active-icon"></div>
+                            <div class="icon-text">Employee</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="#main-content-3">
+                    <div onClick="changeTab_3()"
+                         class="sidebar-item sidebar-item-menu">
+
+                        <div class="item-content">
+                            <div class="icon-main-sidebar-timesheet item-icon active-icon"></div>
+                            <div class="icon-text">Product</div>
+
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!--Main content 1-->
+    <div class="main-content" id="main-content-1">
+        <div class="view-header pos-relative dis-align-items-center">
+            <div class="dis-flex view-header-content dis-align-items-center">
+                <div class="profile-info-header w-42">
+                    <div class="header-user">
+                        <div class="header-user-avatar avatar-50 pos-relative">
+                            <div class="avatar-50 text-overflow">
+                                <img class="avatar-50" src="~/Content/Image/Avatar.jpg" />
+                            </div>
+                        </div>
+                        <div>
+                            <div class="header-user-name text-overflow dis-flex">
+                                <div class="user-full-name text-overflow">
+                                    <div class="user-name">@Session["Name"].ToString()</div>
+                                    <div class="user-code">(@Session["EmployeeID"].ToString())</div>
+                                </div>
+                            </div>
+                            <div class="more-infor m-l-16">
+                                @if ((string)Session["Position"] == "1")
+                                {
+                                    <span>Quản lí</span>
+                                }
+                                else
+                                {
+                                    <span>Nhân viên</span>
+                                }
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="group-box">
+            <div class="title">Information</div>
+            <div class="infomation">
+                <div class="row gx-5">
+                    <div class="col right-side">
+                        <div class="info-item row">
+                            <label class="col-sm" for="#">EmployeeID</label>
+                            <div class="content-info col-sm">@Session["EmployeeID"].ToString()</div>
+                        </div>
+                        <div class="info-item row">
+                            <label class="col-sm" for="#">Full Name</label>
+                            <div class="content-info col-sm">@Session["Name"].ToString()</div>
+                        </div>
+                        <div class="info-item row">
+                            <label class="col-sm" for="#">Birth Of Day</label>
+                            <div class="content-info col-sm">@Session["BirthOfDay"].ToString()</div>
+                        </div>
+                    </div>
+
+                    <div class="col left-side">
+                        <div class="info-item row">
+                            <label class="col-sm" for="#">Address</label>
+                            <div class="content-info col-sm">@Session["Address"].ToString()</div>
+                        </div>
+                        <div class="info-item row">
+                            <label class="col-sm" for="#">Hours</label>
+                            <div class="content-info col-sm">@Session["WorkHours"].ToString()</div>
+                        </div>
+                        <div class="info-item row">
+                            <label class="col-sm" for="#">Market</label>
+                            <div class="content-info col-sm">@Session["NameMarket"]</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Main content 2 -->
+    <!--Employee manage-->
+    <div class="main-content" id="main-content-2" style="display: none">
+        <div class="employee-container">
+            @if ((string)Session["Position"] == "1")
+            {
+                <div class="btn-wrapper">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#xacnhan">
+                        Add
+                    </button>
+                </div>
+            }
+            <div class="table-container">
+                <div class="title">
+                    Employee List
+                </div>
+                <div class="table-wrapper">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Birth Of Day</th>
+                                <th scope="col">Address</th>
+                                <th scope="col">Phone</th>
+                                <th scope="col">Position</th>
+                                <th scope="col">Hours</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <!--Only Position == 1 can see-->
+                        @if ((string)Session["Position"] == "1")
+                        {
+                            <tbody>
+                                @foreach (var emp in ViewBag.employees)
+                                {
+                                    string txtEmpName_class = "nameEmp_" + emp.EmployeeID;
+                                    string txtEmpBod_class = "bodEmp_" + emp.EmployeeID;
+                                    string txtEmpAdd_class = "addEmp_" + emp.EmployeeID;
+                                    string txtEmpPhone_class = "phoneEmp_" + emp.EmployeeID;
+                                    string txtPositionEmp_class = "positionEmp_" + emp.EmployeeID;
+                                    string txtHourEmp_class = "hourEmp_" + emp.EmployeeID;
+                                    <tr>
+                                        <td>@emp.EmployeeID</td>
+                                        <td><input type="text" class="@txtEmpName_class" style="height:10px;width:100px" value="@emp.Name" /></td>
+                                        <td><input type="text" class="@txtEmpBod_class" style="height:10px;width:200px" value="@emp.BirthOfDay.ToString("dd-MM-yyyy")" /></td>
+                                        <td><input type="text" class="@txtEmpAdd_class" style="height:10px;width:200px" value="@emp.Address" /></td>
+                                        <td><input type="text" class="@txtEmpPhone_class" style="height:10px;width:200px" value="@emp.Phone" /></td>
+                                        <td><input type="text" class="@txtPositionEmp_class" style="height:10px;width:100px" value="@emp.Position" /></td>
+                                        <td><input type="text" class="@txtHourEmp_class" style="height:10px;width:100px" value="@emp.WorkHours" /></td>
+                                        <td>
+                                            <button type="submit" class="deleteEmp btn btn-danger btn-sm mr-2" data-toggle="modal" data-id="@emp.EmployeeID">
+                                                Delete
+                                            </button>
+                                            <button type="submit" class="editEmp btn btn-danger btn-sm mr-2" data-toggle="modal" data-id="@emp.EmployeeID">
+                                                Edit
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    @if ((string)Session["Position"] == "1")
+    {
+        <!--Add Remove Employee-->
+        <div class="modal fade" id="xacnhan" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content animated bounceIn">
+                    <div class="modal-header">
+                        <!--Add-->
+                        <h4>Add Employee</h4>
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="input" class="control-label">Full Name</label>
+                            <input type="text" placeholder="Full Name" class="form-control" id="aName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="input" class="control-label">Birth Of Day</label>
+                            <input type="text" placeholder="yyyy-MM-dd" class="form-control" id="aBod" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="input" class="control-label">Address</label>
+                            <input type="text" placeholder="Address" class="form-control" id="aAddress" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="input" class="control-label">Phone</label>
+                            <input type="text" placeholder="Phone" class="form-control" id="aPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="input" class="control-label">User Name</label>
+                            <input type="text" placeholder="User Name" class="form-control" id="aUsername" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="input" class="control-label">Password</label>
+                            <input type="password" placeholder="Password" class="form-control" id="aPwd" required>
+                        </div>
+                        <div class="form-group">
+                            <center><button class="btn btn-success" id="btnAdd">Add</button></center>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Form Edit-->
+        <div class="modal fade" id="editEmp" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content animated bounceIn">
+                    <div class="modal-header">
+                        <h4>Edit Employee</h4>
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="input" class="control-label">Employee ID</label>
+                            <input type="text" placeholder="Employee ID" class="form-control" id="empId" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="input" class="control-label">Full Name</label>
+                            <input type="text" placeholder="Full Name" class="form-control" id="fullName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="input" class="control-label">Birth Of Day</label>
+                            <input type="text" placeholder="yyyy-mm-dd" class="form-control" id="bod" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="input" class="control-label">Address</label>
+                            <input type="text" placeholder="Address" class="form-control" id="address" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="input" class="control-label">Phone</label>
+                            <input type="text" placeholder="Phone" class="form-control" id="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="input" class="control-label">Position</label>
+                            <input type="text" placeholder="Position" class="form-control" id="position" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="input" class="control-label">Hours</label>
+                            <input type="text" placeholder="Hours" class="form-control" id="hour" required>
+                        </div>
+                        <div class="form-group">
+                            <center><button class="btn btn-success" id="btnEditEmp">Edit</button></center>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--End form-->
+    }
+    <!-- Main content 3-->
+    <!--Product manage-->
+    <div class="main-content" id="main-content-3" style="display: none">
+        <div class="employee-container">
+            <div class="btn-wrapper">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addP">
+                    Add
+                </button>
+
+            </div>
+            <!--Search form-->
+            <div class="input-group" style="width:500px">
+                <input id="search" type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+                       aria-describedby="search-addon" />
+                <button id="btn-search" type="submit" class="btn btn-outline-primary">Search</button>
+
+            </div>
+            <!--End search form-->
+            <br />
+            <div class="table-container">
+                <div class="title">
+                    Product List
+                </div>
+                <div class="table-wrapper">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">CategoryID</th>
+                                <th scope="col">ProducerID</th>
+                                <th scope="col"></th>
+                            </tr>
+                        <tbody>
+                            @foreach (var product in ViewBag.products)
+                            {
+                                string txtProName_class = "namePro_" + product.ProductID;
+                                string txtProPrice_class = "pricePro_" + product.ProductID;
+                                string txtProAmount_class = "amountPro_" + product.ProductID;
+                                string txtProDes_class = "desPro_" + product.ProductID;
+                                string txtProCategoryId_class = "categoryId_" + product.ProductID;
+                                string txtProProducerId_class = "producerId_" + product.ProductID;
+                                <tr>
+                                    <td>@product.ProductID</td>
+                                    <td><input type="text" class="@txtProName_class" style="height:10px" value="@product.Name" /></td>
+                                    <td><input type="text" class="@txtProPrice_class" style="height:10px" value="@product.Price" /></td>
+                                    <td>@product.DateProduce.ToString("dd-MM-yyyy")</td>
+                                    <td><input type="text" class="@txtProAmount_class" style="height:10px;width:100px" value="@product.Amount" /></td>
+                                    <td><input type="text" class="@txtProDes_class" style="height:10px" value="@product.Description" /></td>
+                                    <td><input type="text" class="@txtProCategoryId_class" style="height:10px;width:100px" value="@product.CategoryID" /></td>
+                                    <td><input type="text" class="@txtProProducerId_class" style="height: 10px;width: 100px" value="@product.ProducerID" /></td>
+                                    <td>
+                                        <button type="submit" class="deletePro btn btn-danger btn-sm mr-2" data-toggle="modal" data-id="@product.ProductID">
+                                            Delete
+                                        </button>
+                                        <button type="submit" class="editPro btn btn-danger btn-sm mr-2" data-toggle="modal" data-id="@product.ProductID">
+                                            Edit
+                                        </button>
+                                    </td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*Add Product*@
+    <div class="modal fade" id="addP" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content animated bounceIn">
+                <div class="modal-header">
+                    @*Add*@
+                    <h4>Add Product</h4>
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="input" class="control-label">Name</label>
+                        <input type="text" placeholder="Name Product" class="form-control" id="aProName">
+                    </div>
+                    <div class="form-group">
+                        <label for="input" class="control-label">Price</label>
+                        <input type="text" placeholder="Price" class="form-control" id="aProPrice">
+                    </div>
+                    <div class="form-group">
+                        <label for="input" class="control-label">Amount</label>
+                        <input type="text" placeholder="Amount" class="form-control" id="aProAmount">
+                    </div>
+                    <div class="form-group">
+                        <label for="input" class="control-label">Description</label>
+                        <input type="text" placeholder="Description" class="form-control" id="aProDescription">
+                    </div>
+                    <div class="form-group">
+                        <label for="input" class="control-label">CategoryID</label>
+                        <input type="text" placeholder="CategoryID" class="form-control" id="aProCateId">
+                    </div>
+                    <div class="form-group">
+                        <label for="input" class="control-label">ProducerID</label>
+                        <input type="text" placeholder="ProducerID" class="form-control" id="aProProducerId">
+                    </div>
+                    <div class="form-group">
+                        <center><button class="btn btn-success" id="btnAddPro" onclick="addPro()">Add</button></center>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Content/Js/Index.js"></script>
+
+
+<!--use ajax-->
+<script type="text/javascript">
+    //Employee
+    //Add
+    $("body").on("click", "#btnAdd", function () {
+        var employee = {};
+        employee.Name = $("#aName").val();
+        employee.BirthOfDay = $("#aBod").val();
+        employee.Address = $("#aAddress").val();
+        employee.Phone = $("#aPhone").val();
+        employee.UserName = $("#aUsername").val();
+        employee.Password = $("#aPwd").val();
+        $.ajax({
+            type: "POST",
+            url: "/Manage/AddEmp",
+            data: JSON.stringify(employee),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+        }).done(function (d) {
+            if (d) {
+                alert("Add success");
+                location.reload();
+            }
+            else {
+                alert("Add failed");
+            }
+        });
+    });
+
+    //Edit //Truyền sai BirthOfDay về Controller
+    $(document).ready(function () {
+        $(".editEmp").click(function () {
+            var employee = {};
+            employee.EmployeeID = $(this).attr("data-id");
+            employee.Name = $(".nameEmp_" + $(this).attr("data-id")).val();        
+            var bod = $(".bodEmp_" + $(this).attr("data-id")).val();            
+            var date_string = moment(bod, "DD-MM-YYYY").format("YYYY-MM-DD");
+                   
+            employee.BirthOfDay = date_string;
+
+            //
+            employee.Address = $(".addEmp_" + $(this).attr("data-id")).val();
+            employee.Phone = $(".phoneEmp_" + $(this).attr("data-id")).val();
+            employee.Position = $(".positionEmp_" + $(this).attr("data-id")).val();
+            employee.WorkHours = $(".hourEmp_" + $(this).attr("data-id")).val();
+            $.ajax({
+                type: "POST",
+                url: "/Manage/EditEmp",
+                data: JSON.stringify(employee),
+                contentType: "application/json; charset=utf-8",
+            }).done(function (data) {
+                if (data) {
+                    alert("Edit success");
+                    location.reload();
+                }
+                else {
+                    alert("Edit failed");
+                }
+            });
+        });
+    });
+
+
+    //Delete
+    $(document).ready(function () {
+        $(".deleteEmp").click(function () {
+            var employee = {};
+            employee.EmployeeID = $(this).attr("data-id");
+            $.ajax({
+                type: "POST",
+                url: "/Manage/deleteEmp",
+                data: JSON.stringify(employee),
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    if (data) {
+                        alert("Delete success");
+                        location.reload();
+                    }
+                }
+            });
+        });
+    });
+
+    //Product
+    //Add
+    $("body").on("click", "#btnAddPro", function () {
+        var product = {};
+        product.Name = $("#aProName").val();
+        product.Price = $("#aProPrice").val();
+        product.Amount = $("#aProAmount").val();
+        product.Description = $("#aProDescription").val();
+        product.CategoryID = $("#aProCateId").val();
+        product.ProducerID = $("#aProProducerId").val();
+        $.ajax({
+            type: "POST",
+            url: "/Product/AddProduct",
+            data: JSON.stringify(product),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+        }).done(function (data) {
+            if (data) {
+                alert("Add success");
+                location.reload();
+            }
+            else {
+                alert("Add failed");
+            }
+        });
+    });
+    //Edit
+    $(document).ready(function () {
+        $(".editPro").click(function () {
+            var product = {};
+            product.ProductID = $(this).attr("data-id");
+            product.Name = $(".namePro_" + $(this).attr("data-id")).val();
+            product.Price = $(".pricePro_" + $(this).attr("data-id")).val();
+            product.Amount = $(".amountPro_" + $(this).attr("data-id")).val();
+            product.Description = $(".desPro_" + $(this).attr("data-id")).val();
+            product.CategoryID = $(".categoryId_" + $(this).attr("data-id")).val();
+            product.ProducerID = $(".producerId_" + $(this).attr("data-id")).val();
+            $.ajax({
+                type: "POST",
+                url: "/Product/EditProduct",
+                data: JSON.stringify(product),
+                contentType: "application/json; charset=utf-8",
+            }).done(function (data) {
+                if (data) {
+                    alert("Edit success");
+                    location.reload();
+                } else {
+                    alert("Edit failed");
+                }
+            });
+        });
+    });
+
+    //Delete
+    $(document).ready(function () {
+        $(".deletePro").click(function () {
+            var product = {};
+            product.ProductID = $(this).attr("data-id");
+            $.ajax({
+                type: "POST",
+                url: "/Product/DeleteProduct",
+                data: JSON.stringify(product),
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    if (data) {
+                        alert("Delete success");
+                        location.reload();
+                    }
+                }
+            });
+        });
+    });
+
+    //Search//Search not work
+    $(document).ready(function () {
+        $("#btn-search").click(function () {
+            var name = $("#search").val();
+            ajax({
+                type: "Post",
+                url: "/Product/SearchProductByName",
+                data: JSON.stringify(name),
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    aler("success");
+                }
+            });
+        });
+    });
+
+</script>
